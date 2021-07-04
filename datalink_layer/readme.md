@@ -262,3 +262,11 @@ Now, as in the previous part, using the same functions, with the BSK modulation,
 <p align="center">
 <image align="center" src = "images/seven.png" width="600">
 </p>
+ 
+> As we expected, the error in the high noise signal is practically zero. But why it isnt from 0 to 10?
+For finding the reason for that I plot the BER diagram in linear scale below 
+ 
+ <p align="center">
+<image align="center" src = "images/eight.png" width="600">
+</p>
+> The linear scale diagram clearly shows why the value in the high signal-to-noise ratio is not specified on the logarithmic diagram; Because the value with the accuracy limit of MATLAB was equal to 0 and it is not possible to display 0 on the logarithmic scale
