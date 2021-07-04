@@ -102,3 +102,84 @@ The MATLAB code is shown below:
 one of the main examples of a linear block code system is hamming code, as we have in this assignment Hamming (7,4) is one of the most popular codings of this type.
 in hamming code, we have a concept named hamming distance that shows the power of hamming code to correct and detect the errors
 For example, consider the code consisting of two code words "000" and "111". The hamming distance between these two words is 3, and therefore it is k=2 error detecting. This means that if one bit is flipped or two bits are flipped, the error can be detected
+
+<p align="center">
+<image align="center" src = "images/one.png" width="600">
+</p>
+
+#### 2.1.2 Hamming codes are a class of linear block codes with n = 2m − 1 and k = 2m − m − 1 for some m > 3. What is the Hamming distance in Hamming codes? Write a MATLAB function to implement encoding of a (7,4) Hamming code.
+ 
+>
+>To write 4 to 7 Hamming coding function, we only need to calculate the added 3 bits in the function, which is done as shown in the following MATLAB file:
+
+    function out = hamming4_7(a)
+    out = [a, mod((a(1)+a(2)+a(3)),2),...
+        mod((a(2)+a(3)+a(4)),2),...
+        mod((a(1)+a(2)+a(4)),2)];
+
+    end
+ 
+ 
+> To test the function, we test it for one input, for example, consider input [1,1,0,1] and get the following result, which is as expected.
+ 
+ #### 2.1.3 Write a MATLAB function to implement decoding of a (7,4) Hamming code utilizing standard array technique. This technique is explained in part 13.2.1 of [1].
+ 
+> In this part, I first executed the function in the usual way in the decoder, then I also performed the function with the method requested in the question.
+  You can find the first function in "decodinghamming4_7.m" and the function that requested in the question is in " syndrome_hamming_decoder.m "
+There are two approaches to decoding Hamming 4: 7 encoding in the book:
+i.	Hard decision
+ii.	Soft decision
+I executed both of these scenarios in this function, but the output of the function gives us the result of a hard decision as to the output. Now we will deal with how to write it.
+For both of these methods, a keyword must be created that has coding results from all possible inputs into a matrix and pass it to the function. The construction of this matrix is as follows
+ 
+    a = linspace(0,15,16);
+    a = de2bi(a);
+    for i = 1:length(a)
+        code(i,:)= hamming4_7(a(i,:));
+    end
+>Now for a hard decision, we have to calculate the input distance to our keywords and report it as a minimum. You can see its implementation in the following code snippet.
+ 
+    %Hard decision
+    input_H = (1- 2 *input <0);
+    distance = sum(abs(ones(16,1)*input_H - code),2);
+    [min_func, index_h] = min(distance);
+    massage_recieved_h = code(index_h,1:4);
+> For the soft decision, we have to calculate the correlation between the input and all keywords and this time report the maximum as the output. You can see the implementation of this algorithm in the following code snippet.
+ 
+   %soft decision
+   input_s = 1- 2 *input ;
+   [max_func, index_s] = max(input_s*(1-2*code)');
+   massage_recieved_s = code(index_s,1:4);
+
+ > for checking the decoder function that we write, I give the previous part output to the function input and as we see the output is the answer that we expected
+ 
+> But in the question we are asked to execute the decoder function with the " syndrome " method for "rigid decision making", which is not very complicated; Only we have to form the decoder defining matrices, which are "H", "G" and "A".Then I performed the method described in the book "Prakis Salehi" and performed the decoder in the following way.
+ 
+     function msg_decoded = syndrome_hamming_4_7_HD(input)
+     n = 7;k = 4;       
+     A = [ 1 1 1;1 1 0;1 0 1;0 1 1 ];             
+     G = [ eye(k) A ];      %Generator matrix
+     H = [ A' eye(n-k) ];   %Parity-check matrix
+     syndrome = mod(input * H',2);
+     find = 0;   %Find position of the error in codeword (index)
+     for i = 1:n
+         if ~find
+             temp = zeros(1,n);
+             temp(i) = 1;
+             search = mod(temp * H',2);
+             if search == syndrome
+                 find = 1;
+                 index = i;
+             end
+         end
+     end
+     correctedcode = input;
+     correctedcode(index) = mod(input(index)+1,2);
+     msg_decoded=correctedcode(1:4);
+     end
+ 
+> To examine as closely as possible the differences between the two methods of decoding Hamming, I plotted the BER diagram in terms of signal-to-noise ratio for both "soft decision" and "hard decision" modes. I also marked the theoretical limits of these two values on the graph.
+
+ <p align="center">
+<image align="center" src = "images/three.gnp"          width="600">
+</p>
