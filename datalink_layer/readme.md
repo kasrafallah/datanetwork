@@ -221,3 +221,44 @@ Consider transmission of 12.5kB of information using 1000 bit frames between a s
    <p align="center">
 <image align="center" src = "images/five.png" width="600">
 </p>
+
+  >   As we expected, for high values of signal to noise, noise is practically ineffective, and this is clearly shown on the diagram. . But why it isnt from 0 to 10? For finding the reason for that I plot the BER diagram in linear scale below
+    
+<p align="center">
+<image align="center" src = "images/six.png" width="600">
+</p>
+ 
+> The linear scale diagram clearly shows why the value in the high signal-to-noise ratio is not specified on the logarithmic diagram; Because the value with the accuracy limit of MATLAB was equal to 0 and it is not possible to display 0 on the logarithmic scale
+ 
+ #### 2.2.2. Simulate an error correction scenario by employing (7,4) Hamming code you have written in the previous part. The procedure is shown in Fig. 1. Change Eb/No from 1 to 10 dB. Plot bit error rate (BER) of information bits versus Eb/No.
+ 
+ > As in the previous section, to send a message, we must first create our packets with the requested method.To do this, first separate the bits of each packet, which was 1000 bits, similar to the previous part, and convert the 4-bit 4-bit using the function obtained in 2.1.2 into a 4-to-7 Hamming encoding. Which is given in the MATLAB code snippet below.
+
+
+    temp_packet = [];
+            for j = 0:4:999
+                packet_data = x(j + counter:j + counter+3);
+                a = hamming4_7(packet_data);
+                temp_packet = [temp_packet a];
+            end
+    txData = temp_packet'
+
+Now, as in the previous part, using the same functions, with the BSK modulation, we pass the packet through the noisy channel. The following code snippet is used for this purpose.
+
+     modSig = bpskModulator(txData)  ;      % Modulate
+     rxSig = awgn(modSig,snr)  ;             % Pass through AWGN
+     rxData = bpskDemodulator(rxSig) ;     % Demodulate
+
+> Now we need to separate the input of the receiver by 7 bits to 7 bits and decode it by the decoder function that I wrote in section 2.1.3 and extract the message. As shown in the code below.
+     temp_packet_received = [];
+     for j = 1:7:length(rxData)
+          packet_data = rxData(j :j +6)';
+          a = encoding4_7(packet_data,code);
+          temp_packet_received = [temp_packet_received a];
+     end
+     recieved = temp_packet_received;
+> In this method, the number of bits sent is fixed, so I just drew the "BER" diagram, which is given in logaritmic scale below.
+ 
+<p align="center">
+<image align="center" src = "images/seven.png" width="600">
+</p>
