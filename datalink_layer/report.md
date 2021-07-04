@@ -146,10 +146,10 @@ For both of these methods, a keyword must be created that has coding results fro
     massage_recieved_h = code(index_h,1:4);
 > For the soft decision, we have to calculate the correlation between the input and all keywords and this time report the maximum as the output. You can see the implementation of this algorithm in the following code snippet.
  
-   %soft decision
-   input_s = 1- 2 *input ;
-   [max_func, index_s] = max(input_s*(1-2*code)');
-   massage_recieved_s = code(index_s,1:4);
+     %soft decision
+     input_s = 1- 2 *input ;
+     [max_func, index_s] = max(input_s*(1-2*code)');
+     massage_recieved_s = code(index_s,1:4);
 
  > for checking the decoder function that we write, I give the previous part output to the function input and as we see the output is the answer that we expected
  
@@ -182,4 +182,41 @@ For both of these methods, a keyword must be created that has coding results fro
 
  <p align="center">
 <image align="center" src = "images/three.png"    width="600">
+</p>
+  
+> As it turns out, the "soft decision" method performs better than the "hard decision" method because of the use of correlation.Also, in both cases, the actual performance is weaker than the theoretical limit, which is not far from our expectations
+
+  
+### 2.2 Employing error-handling in a communication channel
+Consider transmission of 12.5kB of information using 1000 bit frames between a sender and the corresponding receiver through a noisy channel. Assuming the BPSK modulation scheme and AWGN channel model, simulate the following.
+
+#### 2.2.1.  Simulate an error detection scenario by adding one parity bit to every data frame such that the total number of ones is even. At the receiver parity bits are checked and if an error is detected, the receiver requests retransmission of that frame. Change Eb/No from 1 to 10 dB and plot the actual number of bytes sent (12.5kB + parity overhead + retransmission overhead) versus Eb/No. Also plot bit error rate (BER) of information bits versus Eb/No.
+  
+> To model the transmission in a noisy channel, we must first prepare the sent message. To do this, we separate the packets of 1000 bits of data and We use the remainder of dividing the sum of the packet members by two as a parity, which is given in the following code snippet.
+
+    parity = mod(sum(packet_data),2);
+    txData = [packet_data parity]';
+
+> Now, using the ready-made MATLAB modulator "comm.BPSKModulator" and the MATLAB noise function "awgn” and then demodulating the channel output, we receive the packets in the receiver. You can see these in the code snippet below.
+
+    modSig = bpskModulator(txData);        % Modulate
+    rxSig = awgn(modSig,snr);                % Pass through AWGN
+    rxData = bpskDemodulator(rxSig);      % Demodulate
+
+> Now, to ensure the accuracy of resending, we calculate the "parity" again and compare it with the "parity" in the package. It was equal to go to the next package, but if not, we send it again and repeat the review.
+  
+    if mod(sum(rxData(1:1000)),2) ~= rxData(1001)
+          counter = counter;
+    elseif mod(sum(rxData(1:1000)),2) == rxData(1001)
+          counter = counter + 1000;
+          temp = temp+ sum(abs(txData - rxData));
+    end
+  
+> Finally, I drew two graphs "BER" to the "E/n" and "total number of bits sent" to the "E/n", which can be seen below in logarithmic scale.
+  
+  <p align="center">
+<image align="center" src = "images/four.png" width="600">
+</p>
+   <p align="center">
+<image align="center" src = "images/five.png" width="600">
 </p>
