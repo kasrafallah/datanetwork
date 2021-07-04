@@ -181,5 +181,5 @@ For both of these methods, a keyword must be created that has coding results fro
 > To examine as closely as possible the differences between the two methods of decoding Hamming, I plotted the BER diagram in terms of signal-to-noise ratio for both "soft decision" and "hard decision" modes. I also marked the theoretical limits of these two values on the graph.
 
  <p align="center">
-<image align="center" src = "images/three.gnp"          width="600">
+<image align="center" src = "images/three.png"    width="600">
 </p>
