@@ -190,6 +190,184 @@ Sever code for handling GET request is shown below:
 
 I used a "hand shake" algorithm again to execute the "POST" command; I put different paths for each type of text and photo file because the content type of these two files are different. The "HANDSHake" algorithm and the code for this section are given below
 
-      <p align="center">
-<image align="center" src = "images/handshake_post.png" width="1000">
+<p align="left">
+<image align="left" src = "images/handshake_post.png" width="1000">
 </p>
+
+                  elif check_num == 5:# POST request
+                print(f'{self.addr} : {self.msg} ')
+                header_lines = self.header.split('\n')
+                header_lines.pop(0)
+                self.header_dictionary = {}
+                error = 0
+                for item in header_lines:
+                    temp = item.split(': ')
+                    temp_dict ={temp[0]:temp[1]}
+                    self.header_dictionary.update(temp_dict)
+                a =str(datetime.datetime.now()).split('.')[0].split(':')[0]+str(datetime.datetime.now()).split('.')[0].split(':')[1]+str(datetime.datetime.now()).split('.')[0].split(':')[2]+str(datetime.datetime.now()).split('.')[1]
+                try:
+                    self.type = self.header_dictionary.get('Content-Type')
+                    self.length = self.header_dictionary.get('Content-Length')
+                    if self.type == 'text/html':
+                        file = a +'.txt'
+                        file_type = 1
+                    elif self.type == 'image/jpg':
+                        file = a +'.jpg'
+                        file_type = 0
+                    elif self.type == 'image/png':
+                        file = a +'.png'
+                        file_type = 0
+                    self.conn.send('im ready to receive'.encode(FORMAT))
+                    self.body = self.conn.recv(int(self.length)).decode(FORMAT)
+                    path = os.getcwd() + '\\' + 'sever_files' + '\\' + file
+                    time.sleep(0.001)
+                    if file_type == 1:
+                        open(path, 'w').write(self.body)
+                    elif file_type == 0:
+                        print(self.body)
+                        open(path, 'wb').write(self.body.encode(FORMAT))
+
+                    self.conn.send(f'''HTTP/1.0 200 OK\nConnection: close\nContent-Length:{len(self.body.encode(FORMAT))}\nContent-Type: {file.split('.')[1]}\nDate: {datetime.datetime.now()}\n\n<html><body><h1>POST!</h1></body></html>'''.encode(FORMAT))
+                    self.log('200')
+                    self.update_response_dictionary('200')
+                    connected = False
+                except:
+                    error = 1
+                    self.conn.send('bad request'.encode(FORMAT))
+                    connected = False
+
+#### 1.4.2.7POST banned
+      
+If num_check become 6 it means, we got a banned message and we reply that as I written below:
+      
+            elif check_num == 6:
+                print(f'{self.addr} : {self.msg} ')
+                self.conn.send(f'''HTTP/1.0 403 Forbidden\nConnection: close\nContent-Length: {len(msg.encode(FORMAT))}\nContent-Type: text/html\nAllow: GET\nDate: {datetime.datetime.now()}\n\n<html><body><h1>FORBIDDEN!</h1></body></html>'''.encode(FORMAT))
+                self.log('403')
+                self.update_response_dictionary('403')
+                connected = False
+
+### 1.4.3 self.request_header_check()
+The function of this function is to determine the type of request sent by the client. Allowed states in the form of global variables I implemented this function.
+Output zero indicates that the general format of the transmission and the "HTTP" version are correct; Output one means the input method in the "HTTP" methods; Output two means the presence of these methods in the list of allowed methods; Explanation three means the presence of the "Get" method and the existence of the corresponding file;Output four is when the client wants something that is not in the folder; Output five means the free "post" command and Finally, output six means forbidden post
+       
+      
+      def request_header_check(self,msg):
+                output = 0
+                msg_Lines = msg.split('\n')
+                #checking first line format
+                first_line_list = msg_Lines[0].split(' ')
+                if len(first_line_list) == 3:
+                    #checking next lines
+                    msg_Lines.pop(0)
+                    for line in msg_Lines:
+                        header = line.split(': ')
+                        if len(header) != 2 or not(first_line_list[2] in HTTP_VERSION):
+                            return 0
+
+                        else:
+                            output = 1
+                else:
+                    return 0
+                if output == 1:
+                    if first_line_list[0] in METHOD:
+                        output = 2
+                    else:
+                        return 1
+                if output ==2:
+                    if first_line_list[0] in ALLOWED_METHODS:
+                        output = 3
+                    else:
+                        return 2
+                if output == 3:
+                    if first_line_list[0] == 'GET':
+                        file = self.msg.split("\n")[0].split(' ')[1]
+                        path = os.getcwd() + '\\' + 'sever_files' + '\\' + file
+                        if os.path.exists(path):
+                            return 3
+                        else:
+                            return 4
+                    else:
+                        output = 5
+                if output == 5 and first_line_list[0] == 'POST'and self.body!="<html><body><h1>THISISFORBIDDEN!</h1></body></html>":
+
+                    return 5
+                if output == 5 and first_line_list[0] == 'POST'and self.body=="<html><body><h1>THISISFORBIDDEN!</h1></body></html>":
+
+                    return 6
+
+## part2 Implementing the HTTP Client
+      
+To implement the client, I wrote a class that establishes a connection with the server and sends the message. Also, to show the multi-thread of the server, we can use several clients and send their messages at the same time. now I'm going to explain client code
+      
+### 2.1 client_message ()
+      
+The client class, like the server class, consists of a variety of internal methods and variables, which I will explain below.
+      
+### 2.1.1 __init__(self, msg)
+      
+In the class definition that is performed in this function, the header and body of the message and connections are created and the continuation of tasks is entrusted to other methods.
+      
+      def __init__(self,msg):
+          PORT = 5099
+          SEVER = socket.gethostbyname(socket.gethostname())
+          print(SEVER)
+          ADDR = (SEVER, PORT)
+          client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+          client.connect(ADDR)
+          self.addr = ADDR
+          self.conn = client
+          self.message = msg
+          self.header = msg.split('\n\n')[0]
+          try:
+              self.body = msg.split('\n\n')[1]
+          except:
+              self.body = ''
+          self.method = self.header.split('\n')[0].split(' ')[0]
+
+### 2.1.2 msg_handel()
+      
+The message handle is the method that sends the message and receives the result. Undoubtedly, in the execution of "Get" and "Post" that we used the handshake algorithm, on the client-side, these items must also be replicated, which has been done.
+To execute the GET request I wrote the steps within the same function, but regarding the execution of the POST request, I executed it in another method of this class. In general, in cases where the client gives forbidden requests, we are dealing with a small code, but In other cases, we need "handshake" functions
+
+      def handel_msg(self):
+
+    print(f'client is ready to send request to ({self.addr})')
+    if self.method == 'POST':
+        self.post_request()
+    else:
+        self.conn.send(self.message.encode(FORMAT))
+        self.response = self.conn.recv(2048).decode(FORMAT)
+        print(self.response)
+        if self.method == 'GET' and self.response.split('\n\n')[0].split('\n')[0].split(' ')[1] == '200':
+            self.header_response = self.response.split('\n\n')[0]
+            self.body_response = self.response.split('\n\n')[1]
+            if self.method == 'GET' and self.header_response.split('\n')[0].split(' ')[1] == '200':
+                self.first_line = self.header.split('\n')[0].split(' ')
+                print(self.first_line[1].split('.')[1])
+                if self.first_line[1].split('.')[1] == 'png' or self.first_line[1].split('.')[1] == 'jpg' or self.first_line[1].split('.')[1] == 'txt':
+                    file = self.first_line[1]
+                    path = os.getcwd() + '\\' + 'client_files' + '\\' + file
+                    length = self.header_response.split('\n')[2].split(': ')[1]
+                    print('buffer size is:', length)
+                    if length.isnumeric():
+                        self.conn.send('im ready to receive'.encode(FORMAT))
+                        data = self.conn.recv(int(length))
+                        print(len(data), 'bytes is delivered to client')
+                        myfile = open(path, 'wb')
+                        myfile.write(data)
+                        myfile.close()
+                        print(f'{file} is saved in client files')
+                    else:
+                        print('error')
+                        client.send('buffer size is not defined'.encode(FORMAT))
+
+### 2.2 multi-thread
+To show that the server is multi-thread, all I have to do is send several messages in a short time, which I did by creating 100 requests, and the result is in the next screenshots.
+for i in range (100):
+  
+    new = client_message(f"POST dedkme.ed HTTP/1.0\nContent-Length: 100000\nContent-Type: text/html\n\nfrfregtg")
+    new.handel_msg()
+
+now the screen shots that shows the multi-thread imposition of the serve:
+
