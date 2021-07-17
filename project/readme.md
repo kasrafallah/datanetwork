@@ -1,4 +1,4 @@
-# HTTP sever client & telnet suport
+# HTTP sever with telnet suport
 
 ## Part 1
 
