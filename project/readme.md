@@ -174,7 +174,7 @@ Sever code for handling GET request is shown below:
       
       
       
- 1.4.2.5when file doesn't exist
+
 
 #### 1.4.2.5when file doesn't exist
       If check_num become 4 it means client wants a file that doesn’t exist in severe and we just answer server with format below:
@@ -189,3 +189,7 @@ Sever code for handling GET request is shown below:
 #### 1.4.2.6 POST request
 
 I used a "hand shake" algorithm again to execute the "POST" command; I put different paths for each type of text and photo file because the content type of these two files are different. The "HANDSHake" algorithm and the code for this section are given below
+
+      <p align="center">
+<image align="center" src = "images/handshake_post.png" width="1000">
+</p>
