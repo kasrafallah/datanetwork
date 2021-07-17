@@ -371,3 +371,6 @@ for i in range (100):
 
 now the screen shots that shows the multi-thread imposition of the serve:
 
+<p align="center">
+<image align="center" src = "images/connections.png" width="1000">
+</p>
