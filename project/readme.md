@@ -372,5 +372,28 @@ for i in range (100):
 now the screen shots that shows the multi-thread imposition of the serve:
 
 <p align="center">
-<image align="center" src = "images/connections.png" width="1000">
+<image align="center" src = "images/connctions.png" width="1000">
 </p>
+      
+## Part 3: Logging Part
+      
+To document the content, I wrote a "log" method in the server class and used it to update the Jason file. To do this, I put all the information in a dictionary and added each one to the end of the log file; Implemented in the following code.
+      
+      def log(self,output_of_server):
+          a = str(self.time)
+          temp_dict = {a:{'Address': self.addr, "Connection": self.conn,
+                       'request_type': self.msg.split("\n")[0].split(" ")[0], 'response': output_of_server,
+                       'time': self.time}}
+          filename = 'log.json'
+          file = open(filename, "r+")
+          data = file.read()
+          #print('injam',file.read())
+          data = data +"\n"+str(temp_dict)
+          file.seek(0)
+          file.write(data)
+          file.close()
+And for example one line of my logging file is
+      
+{'2021-07-15 19:44:45.441892': {'Address': ('192.168.56.1', 1596), 'Connection': <socket.socket fd=1540, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.56.1', 5099), raddr=('192.168.56.1', 1596)>, 'request_type': 'POST', 'response': '200', 'time': datetime.datetime(2021, 7, 15, 19, 44, 45, 441892)}}
+
+
