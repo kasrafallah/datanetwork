@@ -117,8 +117,75 @@ If check_num become 2 it means, that we got a method in our request that is in o
             self.log('405')
             self.update_response_dictionary('405')
             connected = False
+#### 1.4.2.4GET
+
+the most complicated part of implementation was handling "GET" request, for this part i use ""Handshake" protocol for obtaining buffer size and use our resources in best way
+my hand shake protocol is:
             
             
 <p align="center">
-<image align="center" src = "images/one.png" width="600">
+<image align="center" src = "images/handshake.png" width="1000">
 </p>
+The above protocol is executed and the same is available on the client side to store the relevant file in the client folder.
+Sever code for handling GET request is shown below: 
+      
+                  elif check_num == 3:  # GET request
+
+                      print(f'{self.addr} :\n{self.msg} ')
+                      file = self.msg.split("\n")[0].split(' ')[1]
+                      path = os.getcwd() +'\\'+'sever_files'+'\\'+ file
+
+
+                      if file.split('.')[1] == 'jpg' :
+                          temp = FILE_STATE.get('jpg')
+                          temp = temp + 1
+                          FILE_STATE.update({'jpg': temp})
+                          fp = open(path, 'rb')
+                          length = len(fp.read())
+                      elif file.split('.')[1] == 'png':
+                          temp = FILE_STATE.get('png')
+                          temp = temp + 1
+                          FILE_STATE.update({'png': temp})
+                          fp = open(path, 'rb')
+                          length = len(fp.read())
+                      else:
+                          temp = FILE_STATE.get('txt')
+                          temp = temp + 1
+                          FILE_STATE.update({'txt': temp})
+                          fp = open(path,'r+').read()
+                          length = len(fp.encode(FORMAT))
+
+                      self.conn.send(f'''HTTP/1.0 200 OK\nConnection: close\nContent-Length: {length}\nContent-Type: {file.split('.')[1]}\nAllow: GET\nDate: {datetime.datetime.now()}\n\n'''.encode(FORMAT))
+
+                      ok = self.conn.recv(2048).decode(FORMAT)
+                      print("client message:",ok)
+                      if ok =='im ready to receive':
+                          temp = open(path, 'rb').read()
+                          self.conn.send(temp)
+                          self.log('200 OK')
+                          self.update_response_dictionary('200')
+                      else:
+                          self.log("200 Error")
+                          self.update_response_dictionary('200')
+                      connected = False
+
+
+
+      
+      
+      
+ 1.4.2.5when file doesn't exist
+
+#### 1.4.2.5when file doesn't exist
+      If check_num become 4 it means client wants a file that doesn’t exist in severe and we just answer server with format below:
+
+            elif check_num == 4:
+                print(f'{self.addr} : {self.msg} ')
+                self.conn.send(f'''HTTP/1.0 301 Moved Permanently\nConnection: close\nContent-Length:{len(msg.encode(FORMAT))}\nContent-Type: text/html\nDate: {datetime.datetime.now()}\n\n<html><body><h1>MOVEDPERMANENTLY!</h1></body></html>'''.encode(FORMAT))
+                self.log('301')
+                self.update_response_dictionary('301')
+                connected = False
+
+#### 1.4.2.6 POST request
+
+I used a "hand shake" algorithm again to execute the "POST" command; I put different paths for each type of text and photo file because the content type of these two files are different. The "HANDSHake" algorithm and the code for this section are given below
