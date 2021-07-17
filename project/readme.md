@@ -394,6 +394,31 @@ To document the content, I wrote a "log" method in the server class and used it 
           file.close()
 And for example one line of my logging file is
       
-{'2021-07-15 19:44:45.441892': {'Address': ('192.168.56.1', 1596), 'Connection': <socket.socket fd=1540, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.56.1', 5099), raddr=('192.168.56.1', 1596)>, 'request_type': 'POST', 'response': '200', 'time': datetime.datetime(2021, 7, 15, 19, 44, 45, 441892)}}
+      {'2021-07-15 19:44:45.441892': {'Address': ('192.168.56.1', 1596), 'Connection': <socket.socket fd=1540, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.56.1', 5099), raddr=('192.168.56.1', 1596)>, 'request_type': 'POST', 'response': '200', 'time': datetime.datetime(2021, 7, 15, 19, 44, 45, 441892)}}
 
 
+## part4: Telnet
+To run this section, I first separated the talent structures in the Request handle code, inserted it into the talent handle loop, and implemented a talent handling method.
+To respond to Tenant commands, I used dictionaries that I defined globally and used them to implement the talent answer in the following format.
+      
+      def handel_Telnet(self):
+          label = True
+          while label:
+              if self.msg == 'number of connected clients':
+                  print('haji chakeratam')
+                  print(f'telnet response ==> number of active connections:{threading.activeCount()}')
+                  self.conn.send(f'number of active connections:{threading.activeCount()-1}'.encode(FORMAT))
+              if self.msg == 'file type stats':
+                  print(f'Telnet connection:{self.addr}\nfile types states')
+                  self.conn.send(f'\nimage/jpg: {str(FILE_STATE.get("jpg"))}\ntext/txt: {str(FILE_STATE.get("txt"))}\nimage/png : {str(FILE_STATE.get("png"))}'.encode(FORMAT))
+              if self.msg == 'request stats':
+                  print(f'Telnet connection:{self.addr}\nrequest stats')
+                  self.conn.send(f'\nGET: {str(REQUEST_STATES.get("GET"))}\nPUT: {str(REQUEST_STATES.get("PUT"))}\nPOST : {str(REQUEST_STATES.get("POST"))}\nDELETE: {str(REQUEST_STATES.get("DELETE"))}\nHEAD : {str(REQUEST_STATES.get("HEAD"))}\nImproper : {str(REQUEST_STATES.get("Improper"))}'.encode(FORMAT))
+              if self.msg =='response stats':
+                  print(f'Telnet connection:{self.addr}\nresponse stats')
+                  self.conn.send(f'\n400: {str(RESPONSE_STATES.get("400"))}\n501: {str(RESPONSE_STATES.get("501"))}\n405 : {str(RESPONSE_STATES.get("405"))}\nDELETE: {str(RESPONSE_STATES.get("DELETE"))}\n200 : {str(RESPONSE_STATES.get("200"))}\n301 : {str(RESPONSE_STATES.get("301"))}\n403 : {str(RESPONSE_STATES.get("403"))}'.encode(FORMAT))
+              if self.msg == 'disconnect':
+                  print("telnet disconnected")
+                  label = False
+              self.msg = self.conn.recv(2048).decode(FORMAT)
+          self.conn.close()
