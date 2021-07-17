@@ -117,3 +117,8 @@ If check_num become 2 it means, that we got a method in our request that is in o
             self.log('405')
             self.update_response_dictionary('405')
             connected = False
+            
+            
+<p align="center">
+<image align="center" src = "images/one.png" width="600">
+</p>
