@@ -2,26 +2,26 @@
 ### introduction 
 #### In this project, I implement many types of coding and modulation and discuss BER and digital channel parameters for a wide variety of communication modulations and codings in a noisy Gaussian channel and give some approaches to the benefits of each manner of communication 
 
-#### topics:
+#### Topics:
 
-##### channel simulation and coding methods
+#### 1.channel simulation and coding methods
 
-##### implementing Bitstiffing coding with channel simulation
+#### 2.implementing Bitstiffing coding with channel simulation
 
-##### implemrnting 4B/5B coding with channel simulation
+#### 3.implemrnting 4B/5B coding with channel simulation
 
-##### implementing hamming code coder and decoder
+#### 4.implementing hamming code coder and decoder:
 
-1. soft decision
-2. hard decision
+ - soft decision
+ - hard decision
 
-##### channel simulation bit one parity bit with BER analyis
+#### 5.channel simulation bit one parity bit with BER analyis
 
-##### channel simulation with to 7 hamming code with BER analyis
+#### 6.channel simulation with to 7 hamming code with BER analyis
 
-##### channel simulation with to 7 hamming code and parity bits with retrasmition methodwith BER analyis
+#### 7.channel simulation with to 7 hamming code and parity bits with retrasmition methodwith BER analyis
 
-##### LDPC simulation channel and BER analyis
+#### 8.LDPC simulation channel and BER analyis
 
 <p align="center">
 <image align="center" src = "images/intro.png" width="300">
