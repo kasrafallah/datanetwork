@@ -23,13 +23,14 @@
 
 ##### LDPC simulation channel and BER analyis
 
-
+<p align="center">
+<image align="center" src = "images/intro.png" width="300">
+</p>
 
 ### description and analysis
 
-<p align="center">
-<image align="center" src = "images/intro.png" width="600">
-</p>
+
+ 
 ### 1. Framing
 #### One of the main issues that we have in receivers is that when our data doesn’t have enough transitions,the receiver won’t receive data properly. As you have learned, two # approaches for solving this problem arebit-stuffing and coding violation. In this section, we will examine these two solutions.
 
