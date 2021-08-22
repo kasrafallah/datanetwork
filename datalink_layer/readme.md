@@ -2,10 +2,34 @@
 ### some notes about the project : 
 #### In this project, I implement many types of coding and modulation and discuss BER and digital channel parameters for a wide variety of communication modulations and codings in a noisy Gaussian channel and give some approaches to the benefits of each manner of communication 
 
+#### topics:
+
+##### channel simulation and coding methods
+
+##### implementing Bitstiffing coding with channel simulation
+
+##### implemrnting 4B/5B coding with channel simulation
+
+#####implementing hamming code coder and decoder
+
+1. soft decision
+2. hard decision
+
+##### channel simulation bit one parity bit with BER analyis
+
+##### channel simulation with to 7 hamming code with BER analyis
+
+##### channel simulation with to 7 hamming code and parity bits with retrasmition methodwith BER analyis
+
+##### LDPC simulation channel and BER analyis
+
+
 
 ### description and analysis
 
-
+<p align="center">
+<image align="center" src = "images/intro.png" width="600">
+</p>
 ### 1. Framing
 #### One of the main issues that we have in receivers is that when our data doesn’t have enough transitions,the receiver won’t receive data properly. As you have learned, two # approaches for solving this problem arebit-stuffing and coding violation. In this section, we will examine these two solutions.
 
