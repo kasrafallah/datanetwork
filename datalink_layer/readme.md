@@ -1,5 +1,5 @@
 ## Gaussian noisy channel simulation & analysis
-### some notes about the project : 
+### introduction 
 #### In this project, I implement many types of coding and modulation and discuss BER and digital channel parameters for a wide variety of communication modulations and codings in a noisy Gaussian channel and give some approaches to the benefits of each manner of communication 
 
 #### topics:
