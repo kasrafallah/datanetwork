@@ -1,10 +1,16 @@
+## gaussian noisy channel simulation analysis
+### some notes about the project : 
+#### In this project, I implement many types of coding and modulation and discuss BER and digital channel parameters for a wide variety of communication modulations and codings in a noisy Gaussian channel and give some approaches to the benefits of each manner of communication 
 
 
-## 1. Framing
-### One of the main issues that we have in receivers is that when our data doesn’t have enough transitions,the receiver won’t receive data properly. As you have learned, two # approaches for solving this problem arebit-stuffing and coding violation. In this section, we will examine these two solutions.
+### description and analysis
 
-## 1.1 Bit-stuffing
-###  Suppose you get some random packets from the upper layer with the same length. Write a Matlab code to frame each packet using bit-stuffing. Use the ‘01111110’ pattern to frame packets. Finally, send the frames to a serial link. At the receiver, you must be able to receive data and extract the packets properly.Report the result of exclusive or (XOR) operation between each extracted packet and corresponding sent packet.
+
+### 1. Framing
+#### One of the main issues that we have in receivers is that when our data doesn’t have enough transitions,the receiver won’t receive data properly. As you have learned, two # approaches for solving this problem arebit-stuffing and coding violation. In this section, we will examine these two solutions.
+
+### 1.1 Bit-stuffing
+####  Suppose you get some random packets from the upper layer with the same length. Write a Matlab code to frame each packet using bit-stuffing. Use the ‘01111110’ pattern to frame packets. Finally, send the frames to a serial link. At the receiver, you must be able to receive data and extract the packets properly.Report the result of exclusive or (XOR) operation between each extracted packet and corresponding sent packet.
 
 > 
 > To execute the bit stuffing protocol for framing in the data link layer, we must first form the packets and look for "11111" in it, which I did with a counter, then we have to add a zero after each one and Finally, place the packages between the flags.
