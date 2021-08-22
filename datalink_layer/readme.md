@@ -10,7 +10,7 @@
 
 ##### implemrnting 4B/5B coding with channel simulation
 
-#####implementing hamming code coder and decoder
+##### implementing hamming code coder and decoder
 
 1. soft decision
 2. hard decision
