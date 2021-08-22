@@ -313,5 +313,32 @@ Now, as in the previous parts, using the same functions, with the BSK modulation
 > Now, I drew two graphs "BER" to the "E/n" and "total number of bits sent" to the "E/n" in logarithmic scale, which can be seen below.
   
 <p align="center">
-<image align="center" src = "images/eight.png" width="600">
+<image align="center" src = "images/2.2.3.1.png" width="600">
+</p>
+
+ <p align="center">
+<image align="center" src = "images/2.2.3.2.png" width="600">
+</p>
+  
+  >  Same as previos parts as we expected, the error in the high noise signal is practically zero. But why it isnt from 0 to 10?For finding the reason for that I plot the BER diagram in linear scale below 
+  
+  
+ <p align="center">
+<image align="center" src = "images/2.2.3.3.png" width="600">
+</p>
+  
+> The linear scale diagram clearly shows why the value in the high signal-to-noise ratio is not specified on the logarithmic diagram; Because the value with the accuracy limit of MATLAB was equal to 0 and it is not possible to display 0 on the logarithmic scale
+
+#### 2.2.4. (10 pts) Compare error-handling techniques of parts 1-3 in terms of total bytes sent and BER using plots you have obtained. Consider different ranges of Eb/No in your comparison.
+  
+> We can use time-averaging to make the discussion more accurate and reduce the random effects due to the ergodicity of the process.I ran the process 10 times and calculate the average and the results are shown below figures.
+To compare the above 3 parts, I plot all the graphs in one figure, which is shown below.frist in linear scale:
+
+   <p align="center">
+<image align="center" src = "images/2.2.4.1.png" width="600">
+</p>
+    
+for higher precision I plot present of BER 
+    <p align="center">
+<image align="center" src = "images/2.2.4.2.png" width="600">
 </p>
