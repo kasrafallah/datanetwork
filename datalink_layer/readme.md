@@ -342,3 +342,61 @@ for higher precision I plot present of BER
     <p align="center">
 <image align="center" src = "images/2.2.4.2.png" width="600">
 </p>
+     
+> In the diagrams, we see that at some points (in exchange for the signal-to-noise ratio) the value of the functions is interrupted, which is due to our zero error at those points. To ensure this, I also plotted the diagram in a linear scale.
+     
+
+   <p align="center">
+<image align="center" src = "images/2.2.4.3.png" width="600">
+</p>     
+   
+> As we can see in the diagram above, our diagnosis was correct and in the diagram there are error points equal to zero. It should be noted that the logarithmic diagram shows the behavior of functions much better and more accurately, so we use it for our analysis in this section. .
+
+#### Discuss the advantages and disadvantages of methods
+    
+> As we can clearly see, the first method, which was the one parity bit for each 1000 bits packet, performed worse on the BER than the other two methods. The "BER" curves of the other two methods were practically the same for low signal-to-noise ratio, and the error rate of these two methods can be considered equal for low signal-to-noise ratio, which we will discuss a little later.But the only thing that determines the superiority of a method is not the BER.
+Now we have to answer the question, which method is better? Or more precisely, which method performs better in what range of signal-to-noise rate?
+First, we draw two graphs on one figure so that we can better see the intervals.
+    <p align="center">
+<image align="center" src = "images/2.2.4.4.png" width="600">
+</p>      
+ >  Priorities in determining the best method can vary, but I assumed that our priority is to have the least signal to noise, followed by the number of bits sent (which actually determines the speed of transmission).
+
+     A.	low signal to noise ratio (1dB - 7 dB)
+In this interval, methods 2.2.2 and 2.2.3 have appropriate performance and better than 2.1.1. It can be seen that inserting a parity bit in the 2.2.3 method greatly increased the total number of bits sent but did not have a noticeable effect on the BER for low signal-to-noise ratio, which was perhaps obvious to intuition as well. Because one parity bit for 1000 bits is for detecting single errors and obviously for low signal to noise ratio probability of multiple errors is too much and one-bit parity has very little role in error detection and only causes packets to be sent multiple times and the channel to become crowded but when signal-to-noise ratio grows up (higher than  4 dB) we could see that single errors become more important and BER rate become decreasing. as we see the difference between two methods grows up as we increase the signal-to-noise ratio which we had predicted most from a theoretical point of view.if channel traffic and speed of transmission are not important to us in this interval, the best method is 2.2.3 but if care about them based on the project and our priorities we could choose between them.
+
+     B.	high signal to noise ratio ( more than 7 dB)
+> In this interval, the error rate of the 2.1.1 method is almost zero, and due to the smaller number of bits required for sending, the 2.2.2 and 2.2.3 methods are better and more efficient.So the best choice for this range is the 2.2.1 method.But the question is, has one parity bit affected performance quality? Theoretically, one parity bit per 1000 bits of data could not help us to detect errors for a low signal-to-noise ratio because for a low signal-to-noise ratio multiple errors have a high probability to happen but when SNR grows up one-bit parity helps us to make our communication more reliable.for better analysis  let test this and transmit packets in noisy channel uncoded and compare the difference between coded with one parity and uncoded transmit  in the next part To further explore Section 2.2.1, we also look at the uncoded sending mode, and I also included the "BER" diagram in the figure below.
+     
+ <p align="center">
+<image align="center" src = "images/2.2.4.5.png" width="600">
+</p> 
+      
+>  As you can see, the unencoded "BER" mode is no different from the 2.2.1 method And only this method increases the channel load but does not improve the transmission quality for low signal-to-noise ratio but when the signal-to-noise ratio grows up we could see our reliability of transmission with method 2.2.1 is more than uncoded transmission in the noisy channel that is the thing we predicted from our theoretical knowlage.
+      
+### 3. LDPC codes
+### Low density parity check matrix (LDPC) codes are linear block codes whose parity-check matrix—as the name implies—is sparse. LDPC codes have proposed for channel coding in 5G downlink. It has been shown, that for long block lengths, the performance of LDPC codes is close to the channel capacity. The theory of LDPC codes is related to a branch of mathematics called graph theory. In this section you will see their performance by just employing ready-made Matlab system objects comm.LDPCEncoder and comm.LDPCDecoder.
+
+
+#### 3.1 Comparing error correction of LDPC and Hamming
+#### Consider transmission of 10 data frames each of length 32400 bits between a sender and the corresponding receiver through a noisy channel. Encode data frames one time with Hamming code you have written, and another time with LDPC code using system objects provided by Matlab. Change SNR from 0 to 5 dB with steps of 0.25 dB and plot BER versus SNR curves of both coding schemes. What can you conclude?
+
+ > In this part, according to the question form, we should use the modulation of "Qpsk" and also we should use the pre-prepared MATLAB function for "LDPC" coding and also MATLAB documentation of these functions was very useful.Make 10 frames and send them through 4-angle angular modulation and apply noise to it, and then calculate its output using the ready-made MATLAB decoder.Now we compare the results on the graph next to the results of the same work by Hamming coding.as the question says I plot the graph with a 0.25 signal to noise ratio, I plot these graphs in logarithmic and linear scale as shown below
+      
+<p align="center">
+<image align="center" src = "images/3.1.png" width="600">
+</p>   
+ 
+<p align="center">
+<image align="center" src = "images/3.2.png" width="600">
+</p> 
+
+> As we can see, our graphs are very discrete. To make our curve more well-defined, I reduce the step size a bit.
+<p align="center">
+<image align="center" src = "images/3.3.png" width="600">
+</p> 
+<p align="center">
+<image align="center" src = "images/3.4.png" width="600">
+</p> 
+
+> As can be seen from the diagram, the "LDPC" coding method has such a great performance that the error rate is close to zero in the signal-to-noise ratio of 0.7 dB. Of course, the Hamming bit rate is 7/4, which is slightly better than the "LDPC" bit rate 2, and using any of these protocols can be useful depending on the situation.
