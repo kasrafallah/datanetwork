@@ -271,3 +271,47 @@ For finding the reason for that I plot the BER diagram in linear scale below
 </p>
   
 >  The linear scale diagram clearly shows why the value in the high signal-to-noise ratio is not specified on the logarithmic diagram; Because the value with the accuracy limit of MATLAB was equal to 0 and it is not possible to display 0 on the logarithmic scale
+
+#### 2.2.3. Implement a Hybrid ARQ (HARQ) scenario by mixing parts 1 and 2. For this part assume there are 999 information bits plus one parity bit (1000 bits) that enter the Hamming encoder. Change Eb/No from 1 to 10 dB Plot the actual number of bytes sent (12.5kB + Hamming code overhead + parity overhead + retransmission overhead) versus Eb/No. Also plot bit error rate (BER) of information bits versus Eb/No.
+
+>  Similar to the previous sections, we start our work by forming packages.Put 999 bits in a packet and put a parity bit similar to part 2.2.1 at the end of it, now give 1000 bits packet 4bits to 4 bit to the function we wrote in part 2.1.2 and make our packet coded by hamming "4-7". We see this algorithm in the following code snippet.
+
+     packet_data = x(counter:counter+998);
+     parity = mod(sum(packet_data),2);
+     txData = [packet_data parity]';
+     temp_packet = [];
+     for j = 1:4:length(txData)
+          a = hamming4_7(txData(j:j+3)');
+          temp_packet = [temp_packet a];    
+     end
+     txData1 = temp_packet';
+
+Now, as in the previous parts, using the same functions, with the BSK modulation, we pass the packet through the noisy channel. The following code snippet is used for this purpose.
+  
+     modSig = bpskModulator(txData)  ;      % Modulate
+     rxSig = awgn(modSig,snr)  ;             % Pass through AWGN
+     rxData = bpskDemodulator(rxSig) ;     % Demodulate
+
+> Now we need to decode the received packet using the decoder function that we wrote in section 2.1.3. Now at the end we have to recalculate the bit parity and compare it with the received parity. We had to go to the next packet; But if it is not equal, we send the packet again and repeat the above algorithm.
+  
+  
+     temp_packet = [];
+     for j = 1:7:length(rxData)
+           a = encoding4_7(rxData(j:j+6)',code);
+           temp_packet = [temp_packet a];    
+     end
+     rxData = temp_packet';
+
+     if mod(sum(rxData(1:999)),2) ~= rxData(1000)
+           counter = counter;
+     elseif mod(sum(rxData(1:999)),2) == rxData(1000)
+           counter = counter + 999;
+           temp = temp+ sum(abs(txData - rxData));
+     end
+
+  
+> Now, I drew two graphs "BER" to the "E/n" and "total number of bits sent" to the "E/n" in logarithmic scale, which can be seen below.
+  
+<p align="center">
+<image align="center" src = "images/eight.png" width="600">
+</p>
